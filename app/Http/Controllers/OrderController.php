@@ -72,7 +72,7 @@ class OrderController extends Controller
 
         $this->updateOrderTotal($order);
 
-        return redirect()->back()->with('success', 'Berhasil ditambahkan ke pesanan!');
+        return redirect()->back()->with('success', 'Berhasil ditambahkan ke pesanan!')->with('show_pending_notif', true);
     }
 
     public function checkout(Order $order)

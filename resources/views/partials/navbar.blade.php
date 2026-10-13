@@ -19,8 +19,11 @@
                 <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" style="transform:scale(.85)">
                     <div class="thumb"><span class="iconify" id="themeIcon" data-icon="mdi:moon-waning-crescent"></span></div>
                 </div>
-                <a href="{{ route('orders.index') }}" class="text-[10px] font-medium grad-warm-soft text-accent border border-line-light px-3 py-1.5 rounded-full hover:border-s-300/25 transition-all flex items-center gap-1">
+                <a href="{{ route('orders.index') }}" class="relative text-[10px] font-medium grad-warm-soft text-accent border border-line-light px-3 py-1.5 rounded-full hover:border-s-300/25 transition-all flex items-center gap-1">
                     <span class="iconify text-xs" data-icon="mdi:cart-outline"></span>Pesanan
+                    @if($pendingOrderCount > 0)
+                    <span class="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[8px] font-bold flex items-center justify-center shadow-lg shadow-red-500/30 pending-badge">{{ $pendingOrderCount }}</span>
+                    @endif
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
@@ -43,7 +46,11 @@
             <a href="#gallery" onclick="closeMob()" class="nav-link text-xs py-1.5">Gallery</a>
             <a href="#contact" onclick="closeMob()" class="nav-link text-xs py-1.5">Contact</a>
             <a href="{{ route('order.create') }}" onclick="closeMob()" class="text-[10px] font-medium grad-warm text-dk-950 px-3 py-1.5 rounded-full w-fit mt-1">Pesan Menu</a>
-            <a href="{{ route('orders.index') }}" onclick="closeMob()" class="text-[10px] font-medium grad-warm-soft text-accent border border-line-light px-3 py-1.5 rounded-full w-fit mt-1">Pesanan Saya</a>
+            <a href="{{ route('orders.index') }}" onclick="closeMob()" class="relative text-[10px] font-medium grad-warm-soft text-accent border border-line-light px-3 py-1.5 rounded-full w-fit mt-1 flex items-center gap-1">Pesanan Saya
+                @if($pendingOrderCount > 0)
+                <span class="min-w-[14px] h-3.5 px-1 rounded-full bg-red-500 text-white text-[7px] font-bold flex items-center justify-center pending-badge-mob">{{ $pendingOrderCount }}</span>
+                @endif
+            </a>
             <form action="{{ route('logout') }}" method="POST" class="mt-1">
                 @csrf
                 <button type="submit" class="text-[10px] font-medium text-red-400 border border-red-500/20 px-3 py-1.5 rounded-full w-fit">Logout</button>

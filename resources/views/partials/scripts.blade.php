@@ -52,6 +52,23 @@ function createParticles(){
     }
 }
 
+function showPendingNotif(){
+    const n=document.getElementById('pendingNotif');
+    if(!n)return;
+    n.style.display='block';
+    gsap.fromTo(n,{opacity:0,x:80,scale:.92},{opacity:1,x:0,scale:1,duration:.55,ease:'power3.out'});
+    const pb=document.getElementById('notifProgress');
+    if(pb){
+        pb.style.width='100%';
+        gsap.to(pb,{width:'0%',duration:8,ease:'linear',onComplete:()=>closePendingNotif()});
+    }
+}
+function closePendingNotif(){
+    const n=document.getElementById('pendingNotif');
+    if(!n)return;
+    gsap.to(n,{opacity:0,x:80,scale:.92,duration:.35,ease:'power2.in',onComplete:()=>{n.style.display='none'}});
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
     gsap.registerPlugin(ScrollTrigger);
     createParticles();
@@ -130,6 +147,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
 
     render();
+
+    @if(session('show_pending_notif'))
+    setTimeout(()=>showPendingNotif(),2000);
+    @endif
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')['detailModal','loginModal'].forEach(id=>{if(document.getElementById(id).style.display==='flex')closeModal(id)})});
 </script>

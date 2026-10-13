@@ -36,6 +36,28 @@
         @endif
 
         @php
+            $pendingOrderCount = $orders->where('status', 'pending')->count();
+        @endphp
+
+        @if($pendingOrderCount > 0)
+        <div id="pendingNotifOrders" class="glass-card rounded-2xl border border-red-500/10 p-4 shadow-lg relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-red-500 to-orange-500"></div>
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0">
+                    <span class="iconify text-lg text-red-400" data-icon="mdi:bell-ring-outline"></span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-xs font-bold text-main mb-0.5">Pesanan Belum Dibayar</h4>
+                    <p class="text-[10px] text-sub leading-relaxed">Anda memiliki <strong class="text-red-400">{{ $pendingOrderCount }}</strong> pesanan yang belum dibayar. Silakan lakukan konfirmasi pembayaran agar pesanan diproses.</p>
+                </div>
+                <button onclick="this.closest('#pendingNotifOrders').remove()" class="w-6 h-6 flex items-center justify-center rounded-lg text-muted hover:text-main hover:bg-s-300/10 transition-all flex-shrink-0">
+                    <span class="iconify text-xs" data-icon="mdi:close"></span>
+                </button>
+            </div>
+        </div>
+        @endif
+
+        @php
             $pendingOrders = $orders->where('status', 'pending');
             $completedOrders = $orders->where('status', 'completed');
         @endphp

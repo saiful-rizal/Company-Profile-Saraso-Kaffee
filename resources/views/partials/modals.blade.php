@@ -18,4 +18,29 @@
     </div>
 </div>
 
+<div id="pendingNotif" class="fixed bottom-6 right-6 z-[150] max-w-sm w-full" style="display:none">
+    <div class="relative glass-card rounded-2xl border border-s-300/10 p-4 shadow-2xl shadow-s-300/5 overflow-hidden">
+        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-red-500 to-orange-500"></div>
+        <button onclick="closePendingNotif()" class="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-lg text-muted hover:text-main hover:bg-s-300/10 transition-all">
+            <span class="iconify text-xs" data-icon="mdi:close"></span>
+        </button>
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0">
+                <span class="iconify text-lg text-red-400" data-icon="mdi:bell-ring-outline"></span>
+            </div>
+            <div class="flex-1 min-w-0 pr-4">
+                <h4 class="text-xs font-bold text-main mb-0.5">Pesanan Belum Dibayar</h4>
+                <p class="text-[10px] text-sub leading-relaxed">Anda memiliki <strong class="text-red-400">{{ $pendingOrderCount }}</strong> pesanan yang belum dibayar. Segera lakukan pembayaran agar pesanan diproses.</p>
+                <a href="{{ route('orders.index') }}" class="inline-flex items-center gap-1 mt-2 text-[10px] font-semibold text-accent hover:text-s-300 transition-colors">
+                    Lihat Pesanan
+                    <span class="iconify text-xs" data-icon="mdi:arrow-right"></span>
+                </a>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-red-500/20">
+            <div id="notifProgress" class="h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full" style="width:100%"></div>
+        </div>
+    </div>
+</div>
+
 <div id="toastBox" class="fixed top-20 right-4 z-[200] flex flex-col gap-3"></div>

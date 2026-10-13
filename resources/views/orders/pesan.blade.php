@@ -46,6 +46,9 @@
                 <div class="flex items-center gap-3">
                     <a href="{{ route('orders.index') }}" class="relative text-[10px] font-medium grad-warm-soft text-accent border border-line-light px-3 py-1.5 rounded-full hover:border-s-300/25 transition-all flex items-center gap-1">
                         <span class="iconify text-xs" data-icon="mdi:clipboard-list-outline"></span>Riwayat
+                        @if(isset($pendingOrderCount) && $pendingOrderCount > 0)
+                        <span class="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[8px] font-bold flex items-center justify-center shadow-lg shadow-red-500/30 pending-badge">{{ $pendingOrderCount }}</span>
+                        @endif
                     </a>
                     <form action="{{ route('logout') }}" method="POST" class="inline">
                         @csrf
@@ -102,6 +105,33 @@
     </div>
 
     <div id="toastBox" class="fixed top-20 right-4 z-[200] flex flex-col gap-3"></div>
+
+    @if(session('show_pending_notif'))
+    <div id="pendingNotifPesan" class="fixed bottom-6 right-6 z-[150] max-w-sm w-full">
+        <div class="relative glass-card rounded-2xl border border-s-300/10 p-4 shadow-2xl shadow-s-300/5 overflow-hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-red-500 to-orange-500"></div>
+            <button onclick="closePesanNotif()" class="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-lg text-muted hover:text-main hover:bg-s-300/10 transition-all">
+                <span class="iconify text-xs" data-icon="mdi:close"></span>
+            </button>
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/15 flex items-center justify-center flex-shrink-0">
+                    <span class="iconify text-lg text-red-400" data-icon="mdi:bell-ring-outline"></span>
+                </div>
+                <div class="flex-1 min-w-0 pr-4">
+                    <h4 class="text-xs font-bold text-main mb-0.5">Pesanan Baru Ditambahkan</h4>
+                    <p class="text-[10px] text-sub leading-relaxed">Pesanan Anda telah tersimpan. Jangan lupa lakukan <strong class="text-red-400">konfirmasi pembayaran</strong> agar diproses.</p>
+                    <a href="{{ route('orders.index') }}" class="inline-flex items-center gap-1 mt-2 text-[10px] font-semibold text-accent hover:text-s-300 transition-colors">
+                        Lihat Pesanan
+                        <span class="iconify text-xs" data-icon="mdi:arrow-right"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-red-500/20">
+                <div id="notifProgressPesan" class="h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full" style="width:100%"></div>
+            </div>
+        </div>
+    </div>
+    @endif
 
     <form id="orderForm" method="POST" action="{{ route('orders.store') }}" class="hidden">
         @csrf
@@ -182,6 +212,39 @@
             c.appendChild(t);
             setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300) }, 3000);
         }
+
+        @if(session('show_pending_notif'))
+        function closePesanNotif(){
+            const n=document.getElementById('pendingNotifPesan');
+            if(!n)return;
+            n.style.transition='opacity .3s, transform .3s';
+            n.style.opacity='0';
+            n.style.transform='translateX(80px) scale(.92)';
+            setTimeout(()=>n.remove(),300);
+        }
+        document.addEventListener('DOMContentLoaded',()=>{
+            const n=document.getElementById('pendingNotifPesan');
+            if(n){
+                n.style.opacity='0';
+                n.style.transform='translateX(80px) scale(.92)';
+                n.style.transition='none';
+                requestAnimationFrame(()=>{
+                    n.style.transition='opacity .55s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1)';
+                    n.style.opacity='1';
+                    n.style.transform='translateX(0) scale(1)';
+                });
+                const pb=document.getElementById('notifProgressPesan');
+                if(pb){
+                    let w=100;
+                    const iv=setInterval(()=>{
+                        w-=100/(8*60);
+                        if(w<=0){w=0;clearInterval(iv);closePesanNotif()}
+                        pb.style.width=w+'%';
+                    },1000/60);
+                }
+            }
+        });
+        @endif
 
         renderMenus();
     </script>
